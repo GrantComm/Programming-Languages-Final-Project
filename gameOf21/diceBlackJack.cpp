@@ -18,6 +18,8 @@ void runComputerTurn(Dice&, int&);
 void runPlayerTurn(Dice&, int&);
 void startGame(Dice&, int&, int&);
 int getDiceTotal(Dice);
+void displayTotals(int, int);
+void checkWinner(int, int);
 
 int main()
 {
@@ -39,8 +41,13 @@ int main()
     // Run the player's turn
     runPlayerTurn(gameDice, userTotal);
 
-    // Run the computer's turn
-    runComputerTurn(gameDice, computerTotal);
+    if (userTotal < 21) {
+        // Run the computer's turn
+        runComputerTurn(gameDice, computerTotal);
+    }
+
+    // Check the winner
+    checkWinner(userTotal, computerTotal);
 }
 
 void startGame(Dice& dice, int& userTotal, int& compTotal)
@@ -111,7 +118,7 @@ int getDiceTotal(Dice dice)
 
 void runComputerTurn(Dice& dice, int& total)
 {
-    cout << "The computer is rolling the dice..." << endl;
+    cout << "\nThe computer is rolling the dice..." << endl;
 
     // Roll the dice
     dice = rollDice(dice);
@@ -128,7 +135,7 @@ void runComputerTurn(Dice& dice, int& total)
         dice = rollDice(dice);
         total += dice.die1 + dice.die2;
         // Display the dice
-        cout << "The computer rolled a " << dice.die1 << " and a " << dice.die2 << endl;
+        cout << "\nThe computer rolled a " << dice.die1 << " and a " << dice.die2 << endl;
         cout << "The computer's total is " << total << endl;
     
         // If the computer total is greater than 21, the user wins
@@ -137,6 +144,38 @@ void runComputerTurn(Dice& dice, int& total)
             cout << "You win!" << endl;
             break;
         }
+        // If the computer total is 21, the computer wins
+        else if (total == 21)
+        {
+            cout << "You lose!" << endl;
+            break;
+        }
+        else if (total > 17)
+        {
+            cout << "The computer will not roll again." << endl;
+        }
+    }
+}
 
+void displayTotals(int userTotal, int compTotal)
+{
+    cout << "\nYour total is " << userTotal << endl;
+    cout << "The computer's total is " << compTotal << endl;
+}
+
+void checkWinner(int userTotal, int compTotal)
+{
+    displayTotals(userTotal, compTotal);
+    if (userTotal > compTotal && userTotal <= 21)
+    {
+        cout << "You win!" << endl;
+    }
+    else if (compTotal > userTotal && compTotal <= 21)
+    {
+        cout << "You lose!" << endl;
+    }
+    else if (userTotal == compTotal)
+    {
+        cout << "It's a tie!" << endl;
     }
 }
