@@ -13,27 +13,39 @@ struct Dice {
     int die2;
 };
 
+// Function prototypes
+
+// rollDice returns a random number between 1 and 6 for each die
 Dice rollDice(Dice&);
+// runComputerTurn executes the computer's turn
 void runComputerTurn(Dice&, int&);
+// runPlayerTurn executes the player's turn
 void runPlayerTurn(Dice&, int&);
+// startGame starts the game
 void startGame(Dice&, int&, int&);
+// getDiceTotal returns the total of the dice
 int getDiceTotal(Dice);
+// displayTotal displays the total of the dice
 void displayTotals(int, int);
+// checkWinner checks to see if there is a winner
 void checkWinner(int, int);
 
 int main()
 {
+    // Declare variables
     srand(time(NULL));
     Dice gameDice;
     int userTotal;
     int computerTotal;
 
+    // Display the game title and instructions
     cout << "\nWelcome to the game of 21!\n";
     cout << "Instead of cards, there are two six-sided dice" << endl;
-    cout << "First the computer rolls, and then the user" << endl;
-    cout << "Both totals are displayed, and then the user has the option to roll the dice." << endl;
+    cout << "First the user rolls, and then the computer" << endl;
+    cout << "The user's total is displayed, and then the user has the option to roll the dice." << endl;
     cout << "If the user exceeds 21, the computer wins." << endl;
     cout << "If the user rolls a total of 21, the user wins." << endl;
+    cout << "If neither player goes over 21 and if they each are unable to get exactly 21, the player with the highest total wins." << endl;
 
     // Start the game
     startGame(gameDice, userTotal, computerTotal);
@@ -52,6 +64,7 @@ int main()
 
 void startGame(Dice& dice, int& userTotal, int& compTotal)
 {
+    // set the dice to zero
     compTotal = 0;
     userTotal = 0;
 
@@ -61,12 +74,13 @@ void startGame(Dice& dice, int& userTotal, int& compTotal)
     // Roll the dice for the user
     userTotal = getDiceTotal(rollDice(dice));
 
-    // Display the totals
+    // Display the user's total
     cout << "\nYou rolled a total of " << userTotal << endl;
 }
 
 void runPlayerTurn(Dice& dice, int& userTotal)
 {
+    // Prompt the user to roll the dice
     cout << "Would you like to roll the dice? (y/n): ";
     char userChoice;
     cin >> userChoice;
@@ -76,10 +90,11 @@ void runPlayerTurn(Dice& dice, int& userTotal)
     {
         // Roll the dice
         rollDice(dice);
+        // Display the dice values
         cout << "\nYou rolled a " << dice.die1 << " and a " << dice.die2 << endl;
         // Get the total of the dice
         userTotal += getDiceTotal(dice);
-        // Display the total
+        // Display the new total
         cout << "Your new total is " << userTotal << endl;
         // If the user total is greater than 21, the computer wins
         if (userTotal > 21)
@@ -101,23 +116,28 @@ void runPlayerTurn(Dice& dice, int& userTotal)
         }
     }
 
+    // If the user chooses not to roll the dice, display the user total
     cout << "\nYour total is " << userTotal << endl;
 }
 
 Dice rollDice(Dice& dice)
 {
+    // Roll the dice
     dice.die1 = rand() % 6 + 1;
     dice.die2 = rand() % 6 + 1;
+    // Return the dice
     return dice;
 }
 
 int getDiceTotal(Dice dice)
 {
+    // Return the total of the dice
     return dice.die1 + dice.die2;
 }
 
 void runComputerTurn(Dice& dice, int& total)
 {
+    // Begin the computer's turn
     cout << "\nThe computer is rolling the dice..." << endl;
 
     // Roll the dice
@@ -150,6 +170,7 @@ void runComputerTurn(Dice& dice, int& total)
             cout << "You lose!" << endl;
             break;
         }
+        // If the computer total is greater than 17, the computer stops rolling
         else if (total > 17)
         {
             cout << "The computer will not roll again." << endl;
@@ -159,21 +180,26 @@ void runComputerTurn(Dice& dice, int& total)
 
 void displayTotals(int userTotal, int compTotal)
 {
+    // Display the user total
     cout << "\nYour total is " << userTotal << endl;
+    // Display the computer total
     cout << "The computer's total is " << compTotal << endl;
 }
 
 void checkWinner(int userTotal, int compTotal)
 {
+    // If the user total is greater than the computer total, the user wins
     displayTotals(userTotal, compTotal);
     if (userTotal > compTotal && userTotal <= 21)
     {
         cout << "You win!" << endl;
     }
+    // If the computer total is greater than the user total, the computer wins
     else if (compTotal > userTotal && compTotal <= 21)
     {
         cout << "You lose!" << endl;
     }
+    // If the user total is equal to the computer total, it is a tie
     else if (userTotal == compTotal)
     {
         cout << "It's a tie!" << endl;
