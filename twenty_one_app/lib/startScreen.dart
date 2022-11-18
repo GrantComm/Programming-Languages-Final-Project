@@ -1,10 +1,11 @@
-// Screen that is shown when the app is started
+// Trae Brown & Grant Commodore
 
 import 'package:flutter/material.dart';
 import 'package:twenty_one_app/gameScreen.dart';
 import 'package:twenty_one_app/models/session.dart';
 import 'package:twenty_one_app/models/user.dart';
 
+// Screen that is shown when the app is started
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
 
