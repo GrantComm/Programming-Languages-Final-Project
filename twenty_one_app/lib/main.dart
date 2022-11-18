@@ -1,3 +1,5 @@
+// Trae Brown & Grant Commodore
+
 import 'package:flutter/material.dart';
 import 'startScreen.dart';
 
