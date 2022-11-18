@@ -257,6 +257,23 @@ class GameScreenState extends State<GameScreen> {
       widget.gameSession.getComputer().incrementTotalWins();
       widget.gameSession.getUser().incrementTotalLosses();
       _showPopup('You lost!', context);
+    } else if (widget.currentUserAction == 'You just chose to stand' &&
+        widget.currentAction == 'The computer chose to stand.') {
+      if (widget.gameSession.getUserScore() >
+          widget.gameSession.getComputerScore()) {
+        widget.gameSession.getUser().incrementTotalWins();
+        widget.gameSession.getComputer().incrementTotalLosses();
+        _showPopup('You won!', context);
+      } else if (widget.gameSession.getUserScore() <
+          widget.gameSession.getComputerScore()) {
+        widget.gameSession.getComputer().incrementTotalWins();
+        widget.gameSession.getUser().incrementTotalLosses();
+        _showPopup('You lost!', context);
+      } else {
+        widget.gameSession.getUser().incrementTotalTies();
+        widget.gameSession.getComputer().incrementTotalTies();
+        _showPopup('It\'s a tie!', context);
+      }
     } else if (widget.gameSession.getComputerScore() == 21) {
       widget.gameSession.getComputer().incrementTotalWins();
       widget.gameSession.getUser().incrementTotalLosses();
@@ -266,7 +283,7 @@ class GameScreenState extends State<GameScreen> {
         widget.gameSession.getUserScore() == 21) {
       widget.gameSession.getComputer().incrementTotalTies();
       widget.gameSession.getUser().incrementTotalTies();
-      _showPopup('It is a tie', context);
+      _showPopup('It\'s a tie', context);
     } else if (widget.gameSession.getComputerScore() > 21) {
       widget.gameSession.getComputer().incrementTotalLosses();
       widget.gameSession.getUser().incrementTotalWins();
