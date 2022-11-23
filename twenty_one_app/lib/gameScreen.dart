@@ -26,6 +26,8 @@ class GameScreen extends StatefulWidget {
   var computerDice2Value = 0;
   String currentAction = '';
   String currentUserAction = '';
+  String computerScore = '??';
+  bool gameIsOver = false;
   Session gameSession;
   GameScreen({super.key, required this.gameSession});
 
@@ -134,15 +136,6 @@ class GameScreenState extends State<GameScreen> {
               ),
               Padding(
                 padding: EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width / 15,
-                  right: MediaQuery.of(context).size.width / 15,
-                ),
-                child: Text(widget.currentAction,
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
                     left: MediaQuery.of(context).size.width / 5,
                     right: MediaQuery.of(context).size.width / 5,
                     top: 10),
@@ -175,7 +168,7 @@ class GameScreenState extends State<GameScreen> {
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            'Score: ${widget.gameSession.getComputerScore()}',
+                            'Score: ${widget.computerScore}',
                             style: const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
@@ -184,6 +177,77 @@ class GameScreenState extends State<GameScreen> {
                     ),
                   ],
                 ),
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width / 15,
+                      right: MediaQuery.of(context).size.width / 15,
+                    ),
+                    child: Visibility(
+                      visible: widget.gameIsOver,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            )),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Theme.of(context).secondaryHeaderColor),
+                            elevation: MaterialStateProperty.all<double>(5.0)),
+                        onPressed: () {
+                          setState(() {
+                            widget.gameIsOver = false;
+                            widget.currentUserAction = '';
+                            widget.currentAction = '';
+                            widget.computerScore = '??';
+                            widget.dice1Value = 0;
+                            widget.dice2Value = 0;
+                            widget.computerDice1Value = 0;
+                            widget.computerDice2Value = 0;
+                            widget.gameSession.resetUserScore();
+                            widget.gameSession.resetComputerScore();
+                            widget.gameSession.incrementGames();
+                          });
+                        },
+                        child: const Text('New Game',
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width / 15,
+                      right: MediaQuery.of(context).size.width / 15,
+                    ),
+                    child: Visibility(
+                      visible: widget.gameIsOver,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            )),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Theme.of(context).secondaryHeaderColor),
+                            elevation: MaterialStateProperty.all<double>(5.0)),
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return SummaryScreen(
+                              gameSession: widget.gameSession,
+                            );
+                          }));
+                        },
+                        child: const Text('End Session',
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -257,7 +321,7 @@ class GameScreenState extends State<GameScreen> {
       widget.gameSession.getComputer().incrementTotalWins();
       widget.gameSession.getUser().incrementTotalLosses();
       _showPopup('You lost!', context);
-    } else if (widget.currentUserAction == 'You just chose to stand' &&
+    } else if (widget.currentUserAction == 'You just chose to stand.' &&
         widget.currentAction == 'The computer chose to stand.') {
       if (widget.gameSession.getUserScore() >
           widget.gameSession.getComputerScore()) {
@@ -296,6 +360,8 @@ class GameScreenState extends State<GameScreen> {
   }
 
   _showPopup(String result, BuildContext context) {
+    widget.gameIsOver = true;
+    widget.computerScore = widget.gameSession.getComputerScore().toString();
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -315,6 +381,7 @@ class GameScreenState extends State<GameScreen> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
+                    widget.gameIsOver = false;
                     widget.currentUserAction = '';
                     widget.currentAction = '';
                     widget.dice1Value = 0;
